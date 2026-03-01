@@ -1,20 +1,29 @@
 * {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     overflow: hidden;
     background: #000;
+    font-family: 'Rajdhani', sans-serif;
 }
 
-canvas {
-    display: block;
-}
+canvas { display: block; }
 
-/* Glass-morphism menus */
+/* ── FLASH EFFECT ── */
+body.flash::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(255,220,50,0.25);
+    pointer-events: none;
+    animation: flashOut 0.25s ease-out forwards;
+    z-index: 999;
+}
+@keyframes flashOut { to { opacity: 0; } }
+
+/* ── SHARED OVERLAY ── */
 .menu, .overlay {
     position: absolute;
     inset: 0;
@@ -22,81 +31,304 @@ canvas {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 20, 30, 0.7);
-    backdrop-filter: blur(10px);
-    color: white;
+    background: radial-gradient(ellipse at 50% 30%, rgba(30,60,120,0.85) 0%, rgba(5,10,30,0.95) 100%);
+    color: #fff;
     text-align: center;
-    z-index: 10;
+    gap: 0;
+    backdrop-filter: blur(4px);
 }
 
+/* Stars background */
+.menu::before, .overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 10% 90%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 50% 45%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 30% 55%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 85% 65%, rgba(255,255,255,0.6), transparent);
+    pointer-events: none;
+    animation: twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle { to { opacity: 0.5; } }
+
+/* ── GLASS CARD ── */
+.glass-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 40px 50px;
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        0 0 80px rgba(100,160,255,0.08);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    z-index: 1;
+    animation: cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Glowing top border accent */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(120,200,255,0.8), transparent);
+    border-radius: 1px;
+}
+
+/* ── TITLE ── */
 h1 {
-    font-size: 5rem;
-    font-weight: 300;
-    letter-spacing: 8px;
-    margin-bottom: 30px;
-    background: linear-gradient(135deg, #fff, #aaddff);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, #ffffff 0%, #a8d8ff 50%, #4facfe 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(170, 221, 255, 0.5);
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 20px rgba(100,180,255,0.4));
 }
 
+.subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 6px;
+    color: rgba(150,200,255,0.6);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    font-weight: 600;
+}
+
+/* ── BUTTONS ── */
 button {
-    padding: 14px 40px;
-    margin: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 300;
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    margin: 7px 0;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    color: #e8f4ff;
+    font-size: 0.95rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
     letter-spacing: 2px;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: 0.3s;
-    backdrop-filter: blur(5px);
-    min-width: 250px;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
 }
 
-button:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+button:hover::after { opacity: 1; }
+
+button:hover {
+    background: rgba(100,180,255,0.15);
+    border-color: rgba(100,180,255,0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(100,180,255,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+button:active { transform: translateY(0); }
+
+button.primary-btn {
+    background: linear-gradient(135deg, rgba(79,172,254,0.3), rgba(0,242,254,0.15));
+    border-color: rgba(79,172,254,0.5);
+    font-size: 1.05rem;
+    letter-spacing: 3px;
+    padding: 15px;
+}
+button.primary-btn:hover {
+    background: linear-gradient(135deg, rgba(79,172,254,0.45), rgba(0,242,254,0.25));
+    box-shadow: 0 8px 30px rgba(79,172,254,0.3);
 }
 
 button:disabled {
-    opacity: 0.3;
+    opacity: 0.35;
     cursor: not-allowed;
+    transform: none;
 }
 
-/* HUD - Heads Up Display */
+/* ── XP BAR ── */
+.xp-display {
+    font-size: 0.85rem;
+    color: rgba(180,210,255,0.7);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.xp-display span { color: #7dd3fc; font-weight: 700; }
+
+/* ── PLANE LIST ── */
+.plane-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-height: 320px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100,180,255,0.3) transparent;
+    padding-right: 4px;
+}
+
+.plane-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s;
+}
+.plane-card:hover { background: rgba(100,180,255,0.1); border-color: rgba(100,180,255,0.3); }
+.plane-card.selected { border-color: rgba(79,172,254,0.6); background: rgba(79,172,254,0.12); }
+
+.plane-info { text-align: left; }
+.plane-name { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; letter-spacing: 2px; color: #e0f0ff; }
+.plane-stats { font-size: 0.75rem; color: rgba(150,200,255,0.6); margin-top: 3px; letter-spacing: 1px; }
+
+.plane-action { flex-shrink: 0; }
+.plane-action button { width: auto; padding: 8px 16px; font-size: 0.8rem; margin: 0; }
+
+/* ── HUD ── */
 .hud {
     position: absolute;
     top: 20px;
     left: 20px;
-    color: white;
-    font-size: 1.1rem;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    padding: 20px 30px;
-    border-radius: 20px;
-    border-left: 4px solid #7dd3fc;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    line-height: 1.8;
-    min-width: 220px;
-}
-
-.hud span {
-    color: #7dd3fc;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.95rem;
+    font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 1.8;
+    background: rgba(0,10,30,0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 14px 20px;
 }
 
-/* Near miss flash */
-@keyframes flash {
-    0% { background-color: rgba(255, 255, 255, 0); }
-    20% { background-color: rgba(255, 255, 100, 0.2); }
-    100% { background-color: rgba(255, 255, 255, 0); }
+.hud-val { color: #7dd3fc; }
+
+/* ── DANGER BORDER ── */
+.hud.danger {
+    border-color: rgba(255,80,80,0.5);
+    animation: dangerpulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes dangerpulse {
+    to { box-shadow: 0 0 20px rgba(255,50,50,0.4); }
 }
 
-.flash {
-    animation: flash 0.2s ease-out;
+/* ── NEAR MISS POPUP ── */
+.near-miss-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255,215,0,0.8);
+    letter-spacing: 4px;
+    pointer-events: none;
+    animation: popupAnim 1.2s ease-out forwards;
+    z-index: 100;
+}
+@keyframes popupAnim {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+    20%  { opacity: 1; transform: translate(-50%, -60%) scale(1.1); }
+    70%  { opacity: 1; transform: translate(-50%, -70%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -80%) scale(0.9); }
+}
+
+/* ── GAME OVER / OVERLAY ── */
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: rgba(200,220,255,0.8);
+}
+.stat-row:last-of-type { border-bottom: none; }
+.stat-row .val { color: #7dd3fc; font-family: 'Orbitron', sans-serif; font-size: 0.95rem; }
+
+/* ── TOUCH CONTROLS ── */
+#touch-controls {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 12px;
+    z-index: 200;
+}
+@media (pointer: coarse) {
+    #touch-controls { display: flex; }
+}
+
+.touch-btn {
+    width: 60px; height: 60px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.7);
+    user-select: none;
+    cursor: pointer;
+    touch-action: none;
+}
+.touch-btn:active { background: rgba(100,180,255,0.2); }
+
+/* ── DIFFICULTY BADGE ── */
+.diff-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(0,10,30,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    color: #7dd3fc;
+    transition: all 0.5s;
 }
